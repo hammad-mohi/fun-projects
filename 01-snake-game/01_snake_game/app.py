@@ -7,6 +7,11 @@ PLAYER_COLOR = "white"
 POTTY_COLOR = "brown"
 BORDER_PADDING = 25
 
+DIR_UP = "UP"
+DIR_DOWN = "DOWN"
+DIR_RIGHT = "RIGHT"
+DIR_LEFT = "LEFT"
+
 # Initial setup
 pygame.init()
 pygame.display.set_caption('Snake Potty Chutharr')
@@ -15,6 +20,7 @@ clock = pygame.time.Clock()
 running = True
 dt = 0
 
+player_dir = DIR_RIGHT
 player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 potty_pos = pygame.Vector2(random.random() * (screen.get_width() - BORDER_PADDING), random.random() * (screen.get_height() - BORDER_PADDING))
 
@@ -36,20 +42,25 @@ while running:
 
     # Using elsif to prevent diagonal motion
     if keys[pygame.K_UP] or keys[pygame.K_w]:
-        if player_pos.y > BORDER_PADDING:
-            player_pos.y -= 300 * dt
+        player_dir = DIR_UP
     elif keys[pygame.K_DOWN] or keys[pygame.K_s]:
-        if player_pos.y < screen.get_height() - BORDER_PADDING:
-            player_pos.y += 300 * dt
+        player_dir = DIR_DOWN
     elif keys[pygame.K_LEFT] or keys[pygame.K_a]:
-        if player_pos.x > BORDER_PADDING:
-            player_pos.x -= 300 * dt
+        player_dir = DIR_LEFT
     elif keys[pygame.K_RIGHT] or keys[pygame.K_d]:
-        if player_pos.x < screen.get_width() - BORDER_PADDING:
-            player_pos.x += 300 * dt
+        player_dir = DIR_RIGHT
+
+    if player_dir == DIR_UP and player_pos.y > BORDER_PADDING:
+        player_pos.y -= 300 * dt
+    if player_dir == DIR_DOWN and player_pos.y < screen.get_height() - BORDER_PADDING:
+        player_pos.y += 300 * dt
+    if player_dir == DIR_LEFT and  player_pos.x > BORDER_PADDING:
+        player_pos.x -= 300 * dt
+    if player_dir == DIR_RIGHT and player_pos.x < screen.get_width() - BORDER_PADDING:
+        player_pos.x += 300 * dt
 
     # TODOs:
-    # 0. Move in direction of last key
+    # // 0. Move in direction of last key
     # 1. Potty in random locations on the screen
     # 2. Following circles for snake as it grows
     # 3. Border to kill the snake
