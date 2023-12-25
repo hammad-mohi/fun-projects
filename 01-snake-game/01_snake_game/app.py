@@ -1,10 +1,14 @@
 import pygame
 import random
+import time
+import math
 
 # Constants
 BG_COLOR = "black"
 PLAYER_COLOR = "white"
 POTTY_COLOR = "brown"
+PLAYER_SIZE = 20
+POTTY_SIZE = 20
 BORDER_PADDING = 25
 
 DIR_UP = "UP"
@@ -12,8 +16,7 @@ DIR_DOWN = "DOWN"
 DIR_RIGHT = "RIGHT"
 DIR_LEFT = "LEFT"
 
-SPEED = 200
-
+TIMEOUT = 0.04
 GRID_SIZE = 20
 
 # Initial setup
@@ -26,9 +29,8 @@ dt = 0
 font = pygame.font.Font('freesansbold.ttf', 18)
 
 player_dir = DIR_RIGHT
-
 player_pos = pygame.Vector2(screen.get_width() // 2, screen.get_height() // 2)
-potty_pos = pygame.Vector2(round(random.random() * (screen.get_width() - BORDER_PADDING)), round(random.random() * (screen.get_height() - BORDER_PADDING)))
+potty_pos = pygame.Vector2(screen.get_width() // 2, screen.get_height() // 2)
 
 while running:
     # poll for events
@@ -54,16 +56,13 @@ while running:
 
     # Move the player
     if player_dir == DIR_UP and player_pos.y > BORDER_PADDING:
-        player_pos.y -= 40
+        player_pos.y -= GRID_SIZE
     elif player_dir == DIR_DOWN and player_pos.y < screen.get_height() - BORDER_PADDING:
-        player_pos.y += 40
+        player_pos.y += GRID_SIZE
     elif player_dir == DIR_LEFT and  player_pos.x > BORDER_PADDING:
-        player_pos.x -= 40
+        player_pos.x -= GRID_SIZE
     elif player_dir == DIR_RIGHT and player_pos.x < screen.get_width() - BORDER_PADDING:
-        player_pos.x += 40
-
-    # player_pos.x = GRID_SIZE * round(player_pos.x / GRID_SIZE)
-    # player_pos.y = GRID_SIZE * round(player_pos.y / GRID_SIZE)
+        player_pos.x += GRID_SIZE
 
     # TODOs:
     # // 0. Move in direction of last key
@@ -91,11 +90,21 @@ while running:
     screen.blit(potty_text, (0,20))
 
     if potty_pos.x == player_pos.x and potty_pos.y == player_pos.y:
-        potty_pos = pygame.Vector2(round(random.random() * (screen.get_width() - BORDER_PADDING)), round(random.random() * (screen.get_height() - BORDER_PADDING)))
+        # Randomly reposition potty within the screen bounds, avoiding the border
+        potty_pos = pygame.Vector2(
+            random.random() * (screen.get_width() - BORDER_PADDING),
+            random.random() * (screen.get_height() - BORDER_PADDING)
+        )
+
+        # Snap potty's x-coordinate to the nearest multiple of GRID_SIZE
+        potty_pos.x = math.floor(potty_pos.x / GRID_SIZE) * GRID_SIZE
+
+        # Snap potty's y-coordinate to the nearest multiple of GRID_SIZE
+        potty_pos.y = math.floor(potty_pos.y / GRID_SIZE) * GRID_SIZE
 
     # Draw snake
-    pygame.draw.circle(screen, PLAYER_COLOR, player_pos, GRID_SIZE)
-    pygame.draw.circle(screen, POTTY_COLOR, potty_pos, GRID_SIZE)
+    pygame.draw.circle(screen, PLAYER_COLOR, player_pos, PLAYER_SIZE)
+    pygame.draw.circle(screen, POTTY_COLOR, potty_pos, POTTY_SIZE)
 
     # 1. Potty Generation
 
@@ -106,6 +115,7 @@ while running:
     # dt is delta time in seconds since last frame, used for framerate-
     # independent physics.
     dt = clock.tick(60) / 1000
+    time.sleep(TIMEOUT)
 
 
 pygame.quit()
