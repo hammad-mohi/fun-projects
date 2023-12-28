@@ -32,6 +32,7 @@ player_dir = DIR_RIGHT
 player_pos = pygame.Vector2(screen.get_width() // 2, screen.get_height() // 2)
 potty_pos = pygame.Vector2(screen.get_width() // 2, screen.get_height() // 2)
 score = -1
+speed = 1
 
 while running:
     # poll for events
@@ -76,12 +77,12 @@ while running:
 
     # TODOs:
     # // 0. Move in direction of last key
-    # 1. Potty in random locations on the screen
+    # // 1. Potty in random locations on the screen
     # 2. Following circles for snake as it grows
-    # 3. Border to kill the snake
+    # // 3. Border to kill the snake
     # 4. Suicide detection - detect if snake kills itself
-    # 5. Track and print score - on HUD
-    # 6. Speed increase
+    # // 5. Track and print score - on HUD
+    # // 6. Speed increase
     # 7. Settings for speed, maps
     # 8. Maps with interior walls
     # 9. Interior wall impact detection
@@ -111,10 +112,8 @@ while running:
         potty_pos.x = math.floor(potty_pos.x / GRID_SIZE) * GRID_SIZE
         # Snap potty's y-coordinate to the nearest multiple of GRID_SIZE
         potty_pos.y = math.floor(potty_pos.y / GRID_SIZE) * GRID_SIZE
-
         score += 1
-
-
+        speed += 0.01
 
     # Draw snake
     pygame.draw.circle(screen, PLAYER_COLOR, player_pos, PLAYER_SIZE)
@@ -129,7 +128,7 @@ while running:
     # dt is delta time in seconds since last frame, used for framerate-
     # independent physics.
     dt = clock.tick(60) / 1000
-    time.sleep(TIMEOUT)
+    time.sleep(TIMEOUT / speed)
 
 
 pygame.quit()
