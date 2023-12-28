@@ -40,6 +40,15 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
+    if player_pos.x >= screen.get_width() - BORDER_PADDING:
+        break
+    elif player_pos.y >= screen.get_height() - BORDER_PADDING:
+        break
+    elif player_pos.y <= BORDER_PADDING:
+        break
+    elif player_pos.x <= BORDER_PADDING:
+        break
+
     # Clear the screen
     screen.fill(BG_COLOR)
 
@@ -104,6 +113,8 @@ while running:
         potty_pos.y = math.floor(potty_pos.y / GRID_SIZE) * GRID_SIZE
 
         score += 1
+
+
 
     # Draw snake
     pygame.draw.circle(screen, PLAYER_COLOR, player_pos, PLAYER_SIZE)
