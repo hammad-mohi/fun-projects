@@ -31,6 +31,7 @@ font = pygame.font.Font('freesansbold.ttf', 18)
 player_dir = DIR_RIGHT
 player_pos = pygame.Vector2(screen.get_width() // 2, screen.get_height() // 2)
 potty_pos = pygame.Vector2(screen.get_width() // 2, screen.get_height() // 2)
+score = -1
 
 while running:
     # poll for events
@@ -86,10 +87,11 @@ while running:
     # Draw HUD
     player_text = font.render(f"Player: ({player_pos.x}, {player_pos.y})", True, PLAYER_COLOR, BG_COLOR)
     potty_text = font.render(f"Potty: ({potty_pos.x}, {potty_pos.y})", True, POTTY_COLOR, BG_COLOR)
+    score_text = font.render(f"Score: {score}", True, POTTY_COLOR, BG_COLOR)
     screen.blit(player_text, (0,0))
     screen.blit(potty_text, (0,20))
-
-    if potty_pos.x == player_pos.x and potty_pos.y == player_pos.y:
+    screen.blit(score_text, (0,40))
+    if abs(potty_pos.x - player_pos.x) <= GRID_SIZE and  abs(potty_pos.y - player_pos.y) <= GRID_SIZE:
         # Randomly reposition potty within the screen bounds, avoiding the border
         potty_pos = pygame.Vector2(
             random.random() * (screen.get_width() - BORDER_PADDING),
@@ -98,9 +100,10 @@ while running:
 
         # Snap potty's x-coordinate to the nearest multiple of GRID_SIZE
         potty_pos.x = math.floor(potty_pos.x / GRID_SIZE) * GRID_SIZE
-
         # Snap potty's y-coordinate to the nearest multiple of GRID_SIZE
         potty_pos.y = math.floor(potty_pos.y / GRID_SIZE) * GRID_SIZE
+
+        score += 1
 
     # Draw snake
     pygame.draw.circle(screen, PLAYER_COLOR, player_pos, PLAYER_SIZE)
